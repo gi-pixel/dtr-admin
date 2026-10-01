@@ -1,37 +1,36 @@
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import { getEventCounts } from '@/lib/queries'
+import { Calendar, CheckCircle2, FileText, Clock } from 'lucide-react'
+import { getEventCounts, getRecentEvents } from '@/lib/queries'
+import PageHeader from '@/components/PageHeader'
+import StatCard from '@/components/StatCard'
+import DashboardRecentCard from '@/components/DashboardRecentCard'
 
 export default async function DashboardPage() {
-  const counts = await getEventCounts()
+  const [counts, recent] = await Promise.all([
+    getEventCounts(),
+    getRecentEvents(5),
+  ])
 
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Link
-          href="/events/new"
-          className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
-        >
-          <Plus size={18} />
-          New Event
-        </Link>
+    <div className="p-6 sm:p-8">
+      <PageHeader
+        title="Dashboard"
+        description="Welcome back. Here's what's happening with your events."
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Total events" value={counts.total} icon={Calendar} />
+        <StatCard
+          label="Published"
+          value={counts.published}
+          icon={CheckCircle2}
+        />
+        <StatCard label="Drafts" value={counts.draft} icon={FileText} />
+        <StatCard label="Upcoming" value={counts.upcoming} icon={Clock} />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Total Events" value={counts.total} />
-        <StatCard label="Published" value={counts.published} />
-        <StatCard label="Drafts" value={counts.draft} />
-      </div>
-    </div>
-  )
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="border rounded-lg p-5 bg-white">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="text-3xl font-bold mt-1">{value}</p>
+      <DashboardRecentCard events={recent} />
     </div>
   )
 }

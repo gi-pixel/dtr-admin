@@ -1,4 +1,7 @@
 import Sidebar from '@/components/Sidebar'
+import Topbar from '@/components/Topbar'
+import { SidebarProvider } from '@/components/SidebarContext'
+import { Toaster } from '@/components/ui/sonner'
 
 export default function DashboardLayout({
   children,
@@ -6,9 +9,15 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-zinc-50">{children}</main>
-    </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <Topbar />
+          <main className="flex-1 overflow-x-hidden">{children}</main>
+        </div>
+      </div>
+      <Toaster position="top-right" richColors />
+    </SidebarProvider>
   )
 }

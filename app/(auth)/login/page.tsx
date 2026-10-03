@@ -52,7 +52,7 @@ export default function LoginPage() {
 
       {/* Ambient orange glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full bg-[#F25623]/10 blur-[120px]" />
+        <div className="w-[600px] h-[600px] rounded-full bg-[#F25623]/5 blur-[100px]" />
       </div>
 
       {/* Content */}

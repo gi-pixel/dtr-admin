@@ -1,8 +1,12 @@
-import { Calendar, CheckCircle2, FileText, Clock, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+import {
+  Calendar,
+  CheckCircle2,
+  FileText,
+  Clock,
+} from 'lucide-react'
 import { getEventCounts, getRecentEvents } from '@/lib/queries'
 import PageHeader from '@/components/PageHeader'
-import StatCard from '@/components/StatCard'
+import StatBoard from '@/components/StatBoard'
 import DashboardRecentCard from '@/components/DashboardRecentCard'
 
 export default async function DashboardPage() {
@@ -18,21 +22,32 @@ export default async function DashboardPage() {
         description="Welcome back. Here's what's happening with your events."
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard
-          label="Total events"
-          value={counts.total}
-          icon={Calendar}
-        />
-        <StatCard
-          label="Published"
-          value={counts.published}
-          icon={CheckCircle2}
-          accent
-        />
-        <StatCard label="Drafts" value={counts.draft} icon={FileText} />
-        <StatCard label="Upcoming" value={counts.upcoming} icon={Clock} />
-      </div>
+      <StatBoard
+        className="mb-8"
+        stats={[
+          {
+            label: 'Total events',
+            value: counts.total,
+            icon: Calendar,
+          },
+          {
+            label: 'Published',
+            value: counts.published,
+            icon: CheckCircle2,
+            accent: true,
+          },
+          {
+            label: 'Drafts',
+            value: counts.draft,
+            icon: FileText,
+          },
+          {
+            label: 'Upcoming',
+            value: counts.upcoming,
+            icon: Clock,
+          },
+        ]}
+      />
 
       <DashboardRecentCard events={recent} />
     </div>

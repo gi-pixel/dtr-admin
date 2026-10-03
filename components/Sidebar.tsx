@@ -153,31 +153,39 @@ export default function Sidebar() {
   const { collapsed, setMobileOpen, mobileOpen } = useSidebar()
   const isMobile = useIsMobile()
 
-  if (isMobile) {
-    return (
-      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent
-          side="left"
-          className="p-0 w-72 bg-sidebar border-r border-sidebar-border text-sidebar-foreground"
-        >
-          <SheetTitle className="sr-only">Navigation</SheetTitle>
-          <div className="flex h-16 items-center border-b border-sidebar-border px-5">
-            <Image
-              src="/logo.png"
-              alt="DTR Global"
-              width={120}
-              height={60}
-              className="h-9 w-auto"
-            />
-          </div>
-          <div className="flex flex-col h-[calc(100vh-4rem)]">
-            <NavItems onNavigate={() => setMobileOpen(false)} />
-            <SidebarFooter />
-          </div>
-        </SheetContent>
-      </Sheet>
-    )
-  }
+if (isMobile) {
+  return (
+    <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+      <SheetContent
+        side="left"
+        className="p-0 w-72 bg-sidebar border-r border-sidebar-border text-sidebar-foreground flex flex-col h-full"
+      >
+        <SheetTitle className="sr-only">Navigation</SheetTitle>
+
+        {/* Header */}
+        <div className="flex h-16 shrink-0 items-center border-b border-sidebar-border px-5">
+          <Image
+            src="/logo.png"
+            alt="DTR Global"
+            width={120}
+            height={60}
+            className="h-9 w-auto"
+          />
+        </div>
+
+        {/* Nav — grows, scrolls if long */}
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <NavItems onNavigate={() => setMobileOpen(false)} />
+        </div>
+
+        {/* Footer — pinned to bottom, always visible */}
+        <div className="shrink-0">
+          <SidebarFooter />
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
 
   return (
     <TooltipProvider delayDuration={200}>

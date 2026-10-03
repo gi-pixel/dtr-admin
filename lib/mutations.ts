@@ -265,6 +265,7 @@ export async function deleteMediaLibraryImage(id: string) {
     .eq('id', id)
   if (deleteError) throw deleteError
 
+  // Also remove the file from storage so it doesn't orphan
   if (row?.image_url) {
     const marker = '/storage/v1/object/public/event-images/'
     const idx = row.image_url.indexOf(marker)
@@ -274,8 +275,9 @@ export async function deleteMediaLibraryImage(id: string) {
         .from('event-images')
         .remove([path])
       if (storageError) {
+        // Non-blocking — DB row is already gone
         // eslint-disable-next-line no-console
-        console.warn('Storage cleanup failed (non-blocking):', storageError)
+        console.warn('Storage cleanup failed:', storageError)
       }
     }
   }

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { X, Loader2, ImageIcon } from 'lucide-react'
+import { X, Loader2, ImageIcon, Trash2 } from 'lucide-react'
 
 import DropZone from './DropZone'
 import EmptyState from './EmptyState'
@@ -80,7 +80,7 @@ export default function MediaLibraryUploader({
     setRemoving(true)
     try {
       await deleteMediaLibraryImage(deleting.id)
-      toastSuccess('Image removed')
+      toastSuccess('Image deleted')
       setDeleting(null)
       router.refresh()
     } catch (err) {
@@ -93,6 +93,7 @@ export default function MediaLibraryUploader({
   return (
     <>
       <div className="space-y-6">
+        {/* Upload zone */}
         <DropZone
           multiple
           onFiles={addFiles}
@@ -100,21 +101,19 @@ export default function MediaLibraryUploader({
           hint="PNG or JPG — drop several at once"
         />
 
+        {/* Pending previews with an Upload button */}
         {pending.length > 0 && (
-          <div className="rounded-xl border bg-card p-4 space-y-4">
+          <div className="rounded-2xl border bg-card p-4 space-y-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">
                 {pending.length} image{pending.length === 1 ? '' : 's'} ready
+                to upload
               </p>
-              <Button
-                size="sm"
-                onClick={handleUpload}
-                disabled={uploading}
-              >
+              <Button size="sm" onClick={handleUpload} disabled={uploading}>
                 {uploading && (
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
                 )}
-                Upload
+                Upload {pending.length}
               </Button>
             </div>
 
@@ -122,7 +121,7 @@ export default function MediaLibraryUploader({
               {previews.map((url, i) => (
                 <div
                   key={url}
-                  className="relative aspect-square rounded overflow-hidden border bg-muted group"
+                  className="relative aspect-square rounded-lg overflow-hidden border bg-muted group"
                 >
                   <Image
                     src={url}
@@ -146,40 +145,62 @@ export default function MediaLibraryUploader({
           </div>
         )}
 
+        {/* Existing library grid with delete buttons */}
         {images.length === 0 ? (
-          <div className="rounded-xl border bg-card">
+          <div className="rounded-2xl border bg-card">
             <EmptyState
               icon={ImageIcon}
               title="No gallery images yet"
-              description="Upload images above — they'll appear on the public /gallery page."
+              description="Upload images above — they'll appear on the public gallery page."
             />
           </div>
         ) : (
-          <div className="rounded-xl border bg-card p-4">
-            <p className="text-sm font-medium mb-4">
-              {images.length} image{images.length === 1 ? '' : 's'} in library
-            </p>
+          <div className="rounded-2xl border bg-card p-4">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-sm font-medium">
+                {images.length} image{images.length === 1 ? '' : 's'} in
+                library
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Hover an image to delete
+              </p>
+            </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {images.map((img) => (
                 <div
                   key={img.id}
-                  className="relative aspect-square rounded-lg overflow-hidden border bg-muted group"
+                  className="relative aspect-square rounded-xl overflow-hidden border bg-muted group"
                 >
                   <Image
                     src={img.image_url}
-                    alt={img.alt_text ?? ''}
+                    alt={img.alt_text ?? img.caption ?? ''}
                     fill
                     sizes="180px"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
+
+                  {/* Delete button */}
                   <button
                     type="button"
                     onClick={() => setDeleting(img)}
-                    className="absolute top-1.5 right-1.5 h-7 w-7 rounded-full bg-black/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-                    aria-label="Delete"
+                    aria-label="Delete image"
+                    className="absolute top-2 right-2 h-8 w-8 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all shadow-lg"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
+
+                  {/* Caption overlay if present */}
+                  {img.caption && (
+                    <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p className="text-[11px] text-white line-clamp-2">
+                        {img.caption}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -187,11 +208,12 @@ export default function MediaLibraryUploader({
         )}
       </div>
 
+      {/* Delete confirmation */}
       <ConfirmDeleteDialog
         open={!!deleting}
         onOpenChange={(open) => !open && setDeleting(null)}
         title="Delete this image?"
-        description="It will be removed from the media library and the public gallery page."
+        description="It will be permanently removed from the media library and the public gallery page. The image file will also be deleted from storage. This cannot be undone."
         onConfirm={handleDelete}
         loading={removing}
       />

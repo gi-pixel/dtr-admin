@@ -12,12 +12,12 @@ export default async function EventsPage() {
   ])
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto">
       <PageHeader
         title="Events"
         description="Manage all events — filter, edit, publish, and delete."
         action={
-          <Button asChild>
+          <Button asChild className="rounded-full">
             <Link href="/events/new">
               <Plus className="mr-2 h-4 w-4" />
               New Event

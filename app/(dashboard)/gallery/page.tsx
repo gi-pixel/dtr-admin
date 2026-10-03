@@ -6,10 +6,10 @@ export default async function GalleryPage() {
   const images = await getMediaLibrary()
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto">
       <PageHeader
         title="Gallery"
-        description="Images uploaded here appear on the public /gallery page."
+        description="Images uploaded here appear on the public gallery page."
       />
       <MediaLibraryUploader images={images} />
     </div>

@@ -20,9 +20,9 @@ export default function PageHeader({
   return (
     <div className={cn('mb-8', className)}>
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
+        <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
           {breadcrumbs.map((crumb, i) => (
-            <span key={i} className="flex items-center gap-1">
+            <span key={i} className="flex items-center gap-1.5">
               {crumb.href ? (
                 <Link
                   href={crumb.href}
@@ -31,10 +31,12 @@ export default function PageHeader({
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="text-foreground">{crumb.label}</span>
+                <span className="text-foreground font-medium">
+                  {crumb.label}
+                </span>
               )}
               {i < breadcrumbs.length - 1 && (
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="h-3 w-3" />
               )}
             </span>
           ))}
@@ -43,9 +45,13 @@ export default function PageHeader({
 
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight truncate">{title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight truncate">
+            {title}
+          </h1>
           {description && (
-            <p className="text-sm text-muted-foreground mt-1">{description}</p>
+            <p className="text-sm text-muted-foreground mt-1.5">
+              {description}
+            </p>
           )}
         </div>
         {action && <div className="shrink-0">{action}</div>}

@@ -184,7 +184,7 @@ export default function EventsTable({
 
   return (
     <>
-      <div className="rounded-lg border bg-card overflow-hidden">
+      <div className="rounded-2xl border bg-card overflow-hidden">
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row gap-3 p-4 border-b">
           <div className="relative flex-1 max-w-sm">

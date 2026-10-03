@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Menu } from 'lucide-react'
 import { useSidebar } from '@/components/SidebarContext'
 import { useIsMobile } from '@/lib/hooks/use-mobile'
@@ -12,7 +13,7 @@ export default function Topbar() {
   if (!isMobile) return null
 
   return (
-    <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-card px-4">
+    <div className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-card px-4">
       <Button
         variant="ghost"
         size="icon"
@@ -21,9 +22,13 @@ export default function Topbar() {
       >
         <Menu className="h-5 w-5" />
       </Button>
-      <span className="font-bold tracking-tight">
-        DTR <span className="text-primary">Admin</span>
-      </span>
+      <Image
+        src="/logo.png"
+        alt="DTR Global"
+        width={100}
+        height={50}
+        className="h-8 w-auto"
+      />
     </div>
   )
 }

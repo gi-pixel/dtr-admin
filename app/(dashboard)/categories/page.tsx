@@ -3,9 +3,8 @@ import { getCategoriesWithCounts } from '@/lib/queries'
 
 export default async function CategoriesPage() {
   const categories = await getCategoriesWithCounts()
-
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto">
       <CategoriesPageClient categories={categories} />
     </div>
   )
